@@ -1,0 +1,16 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2021": true
+    },
+    "extends": "standard-with-typescript",
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "project": "ship-service/tsconfig.json",
+        "sourceType": "module"
+    },
+    "rules": {
+        "@typescript-eslint/semi": "off"
+    }
+}
