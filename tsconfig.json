@@ -8,7 +8,11 @@
     "rootDir": "./",
     "useUnknownInCatchVariables": false,
     "esModuleInterop": true,
-    "noUnusedLocals": false
+    "noUnusedLocals": false,
+    "strictPropertyInitialization": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": false
   },
   "include": [
     "**/*.ts",
