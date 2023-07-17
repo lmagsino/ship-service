@@ -3,7 +3,9 @@ import ShipRepository from '../repositories/ship';
 import RoleRepository from '../repositories/role';
 
 export default class Ship {
-  static storeData() {
+  static async storeData() {
+    if (await this.hasExistingData()) return;
+
     SpacexApi.getAll().then(async function (data) {
       const values1: any[] = []
       const values2: any[] = []
@@ -42,5 +44,11 @@ export default class Ship {
 
   static findRole(roles, roleName) {
     return roles.find(role => role.name === roleName);
+  }
+
+  static async hasExistingData() {
+    const ships = await ShipRepository.findAll();
+
+    if (ships.length !== 0) return true;
   }
 }

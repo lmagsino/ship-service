@@ -13,4 +13,9 @@ export default class ShipRepository {
 
     return await DataSource.query(sql);
   }
+
+  static async findAll() {
+    const sql = 'SELECT * from ship';
+    return await DataSource.query(sql);
+  }
 }
