@@ -5,24 +5,17 @@ import RoleRepository from '../repositories/role';
 export default class Ship {
   static storeData() {
     SpacexApi.getAll().then(async function (data) {
-      // console.log(data);
       const values1: any[] = []
       const values2: any[] = []
-      const valuesRoles: any[] = []
+      const roles: any[] = []
 
       data.forEach(obj => {
-        // console.log(obj.id)
         values1.push([obj.id, obj.name, obj.type, obj.year_built, obj.active]);
         values2.push([obj.id, obj.roles])
-        valuesRoles.push(obj.roles)
+        roles.push(obj.roles)
       });
 
-      const b = [...new Set(valuesRoles.flat())];
-      const c = b.map(role => {
-        return [role]
-      })
-
-      const roleObj = await RoleRepository.bulkInsert(c);
+      const savedRoles = await RoleRepository.bulkInsert(Ship.formatRoles(roles));
       ShipRepository.bulkInsert(values1);
 
       const shipRoleObj: any[] = []
@@ -30,8 +23,7 @@ export default class Ship {
       values2.forEach(role => {
         role[1].forEach(async function (obj) {
           // search role array
-          const roleO = roleObj.find(role => role.name === obj);
-
+          const roleO = Ship.findRole(savedRoles, obj);
           if (roleO === undefined) { return }
           shipRoleObj.push([role[0], roleO.id]);
         })
@@ -39,5 +31,16 @@ export default class Ship {
 
       ShipRepository.bulkInsertShipRole(shipRoleObj);
     });
+  }
+
+  static formatRoles(roles) {
+    const uniqueRoles = [...new Set(roles.flat())];
+    return uniqueRoles.map(role => {
+      return [role];
+    });
+  }
+
+  static findRole(roles, roleName) {
+    return roles.find(role => role.name === roleName);
   }
 }
