@@ -35,6 +35,10 @@ export default class Ship {
     });
   }
 
+  static async findOne(id) {
+    return await ShipRepository.findOne(id);
+  }
+
   static formatRoles(roles) {
     const uniqueRoles = [...new Set(roles.flat())];
     return uniqueRoles.map(role => {

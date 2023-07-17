@@ -1,7 +1,10 @@
 import Koa from 'koa';
+import bodyParser from 'koa-bodyparser';
+
 import HttpStatus from 'http-status-codes';
 import Ship from './services/ship';
 import DataSource from './config/database';
+import shipController from './controllers/ship'
 
 const app = new Koa();
 
@@ -16,12 +19,11 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
     ctx.app.emit('error', error, ctx);
   }
 });
+app.use(bodyParser());
 
-// Initial route
-app.use(async (ctx: Koa.Context) => {
-  console.log('test')
-  // ctx.body = 'Hello world';
-});
+// Route middleware.
+app.use(shipController.routes());
+app.use(shipController.allowedMethods());
 
 // Application error logging.
 app.on('error', console.error);
