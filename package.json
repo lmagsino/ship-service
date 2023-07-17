@@ -12,7 +12,13 @@
     "lint": "eslint --ignore-path .eslintignore --ext .js,.ts ."
   },
   "dependencies": {
-    "koa": "^2.14.2"
+    "@types/node-fetch": "^2.6.4",
+    "@types/pg": "^8.10.2",
+    "@types/pg-format": "^1.0.2",
+    "dotenv": "^16.3.1",
+    "koa": "^2.14.2",
+    "node-fetch": "v2",
+    "pg-format": "^1.0.4"
   },
   "devDependencies": {
     "@types/http-status-codes": "^1.2.0",

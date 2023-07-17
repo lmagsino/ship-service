@@ -1,5 +1,7 @@
 import Koa from 'koa';
 import HttpStatus from 'http-status-codes';
+import Ship from './services/ship';
+import DataSource from './database/connection';
 
 const app = new Koa();
 
@@ -17,10 +19,20 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
 
 // Initial route
 app.use(async (ctx: Koa.Context) => {
-  ctx.body = 'Hello world';
+  console.log('test')
+  // ctx.body = 'Hello world';
 });
 
 // Application error logging.
 app.on('error', console.error);
+
+const PORT: number = Number(process.env.PORT) || 3000;
+
+DataSource.initialize()
+  .then(() => {
+    app.listen(PORT);
+    Ship.storeData();
+  })
+  .catch((error) => { console.log(error); })
 
 export default app;
