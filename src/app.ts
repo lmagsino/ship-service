@@ -1,7 +1,7 @@
 import Koa from 'koa';
 import HttpStatus from 'http-status-codes';
 import Ship from './services/ship';
-import DataSource from './database/connection';
+import DataSource from './config/database';
 
 const app = new Koa();
 

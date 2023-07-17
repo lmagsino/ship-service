@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm'
 import dotenv from 'dotenv';
-import Ship from '../entity/ship'
-import Role from '../entity/role'
+import Ship from '../models/ship'
+import Role from '../models/role'
 
 dotenv.config()
 
