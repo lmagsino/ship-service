@@ -9,6 +9,18 @@ const routerOpts: Router.IRouterOptions = {
 
 const router: Router = new Router(routerOpts);
 
+router.get('/query', async (ctx: Koa.Context) => {
+  const ships = await shipService.searchAll(ctx.query);
+
+  if (!ships) {
+    ctx.throw(HttpStatus.NOT_FOUND);
+  }
+
+  ctx.body = {
+    ships
+  };
+});
+
 router.get('/:ship_id', async (ctx: Koa.Context) => {
   const ship = await shipService.findOne(ctx.params.ship_id);
 

@@ -2,7 +2,7 @@ import SpacexApi from '../api/SpacexApi';
 import ShipRepository from '../repositories/ship';
 import RoleRepository from '../repositories/role';
 
-export default class Ship {
+export default class ShipService {
   static async storeData() {
     if (await this.hasExistingData()) return;
 
@@ -17,7 +17,7 @@ export default class Ship {
         roles.push(obj.roles)
       });
 
-      const savedRoles = await RoleRepository.bulkInsert(Ship.formatRoles(roles));
+      const savedRoles = await RoleRepository.bulkInsert(ShipService.formatRoles(roles));
       ShipRepository.bulkInsert(values1);
 
       const shipRoleObj: any[] = []
@@ -25,7 +25,7 @@ export default class Ship {
       values2.forEach(role => {
         role[1].forEach(async function (obj) {
           // search role array
-          const roleO = Ship.findRole(savedRoles, obj);
+          const roleO = ShipService.findRole(savedRoles, obj);
           if (roleO === undefined) { return }
           shipRoleObj.push([role[0], roleO.id]);
         })
@@ -37,6 +37,10 @@ export default class Ship {
 
   static async findOne(id) {
     return await ShipRepository.findOne(id);
+  }
+
+  static async searchAll(params) {
+    return await ShipRepository.searchAll(ShipService.buildQueryMapping(params));
   }
 
   static formatRoles(roles) {
@@ -54,5 +58,18 @@ export default class Ship {
     const ships = await ShipRepository.findAll();
 
     if (ships.length !== 0) return true;
+  }
+
+  static buildQueryMapping(params) {
+    const mapping: any[] = []
+
+    ShipRepository.queryMapping.forEach((queryMap) => {
+      const value = params[queryMap.queryName]
+      if (value) {
+        mapping.push([queryMap.sqlFieldName, value, queryMap.special])
+      }
+    })
+
+    return mapping;
   }
 }
