@@ -43,6 +43,76 @@ export default class ShipService {
     return await ShipRepository.searchAll(ShipService.buildQueryMapping(params));
   }
 
+  static async getSummarySql() {
+    const ships = await ShipRepository.findAll();
+    const activeShips = await ShipRepository.findByActive(true);
+    const inactiveShips = await ShipRepository.findByActive(false);
+    const minYear = await ShipRepository.findMinYear();
+    const maxYear = await ShipRepository.findMaxYear();
+
+    const shipTypesMapping = await ShipRepository.countShipTypes();
+    const shipTypes = {};
+    shipTypesMapping.forEach(shipType => {
+      shipTypes[shipType.type] = shipType.count
+    })
+
+    const summary = {
+      total_ships: ships.length,
+      total_active_ships: activeShips.length,
+      total_inactive_ships: inactiveShips.legth,
+      ship_types: shipTypes,
+      min_year_built: minYear[0].min,
+      max_year_built: maxYear[0].max
+    }
+
+    return summary;
+  }
+
+  static async getSummary() {
+    const ships = await ShipRepository.findAll();
+    let countShips = 0;
+    let countActive = 0;
+    let countInactive = 0;
+    let minYear = 0;
+    let maxYear = 0;
+
+    ships.forEach((ship) => {
+      countShips++
+      if (ship.active) {
+        countActive++
+      } else {
+        countInactive++
+      }
+
+      if (ship.year_built !== null) {
+        if (minYear === 0 || ship.year_built < minYear) {
+          minYear = ship.year_built
+        }
+
+        if (maxYear === 0 || ship.year_built > maxYear) {
+          maxYear = ship.year_built
+        }
+      }
+    });
+
+    const shipTypesMapping = await ShipRepository.countShipTypes();
+    const shipTypes = {};
+    shipTypesMapping.forEach(shipType => {
+      shipTypes[shipType.type] = shipType.count
+    })
+
+    const summary = {
+      total_ships: countShips,
+      total_active_ships: countActive,
+      total_inactive_ships: countInactive,
+      ship_types: shipTypes,
+      min_year_built: minYear,
+      max_year_built: maxYear
+    }
+
+    return summary;
+  }
+
   static formatRoles(roles) {
     const uniqueRoles = [...new Set(roles.flat())];
     return uniqueRoles.map(role => {
