@@ -36,11 +36,31 @@ export default class ShipRepository {
     return await ships[0];
   }
 
+  static async findByActive(active) {
+    const sql = 'SELECT * from ship where active = $1';
+    return await DataSource.query(sql, [active]);
+  }
+
+  static async findMinYear() {
+    const sql = 'SELECT MIN(year_built) FROM ship ';
+    return await DataSource.query(sql);
+  }
+
+  static async findMaxYear() {
+    const sql = 'SELECT MAX(year_built) FROM ship ';
+    return await DataSource.query(sql);
+  }
+
   static async searchAll(params) {
     const sql =
     'Select ship.*, array_agg(role.name) as roles FROM ship INNER JOIN ship_role on ship.id = ship_role.ship_id INNER JOIN role on ship_role.role_id = role.id WHERE %L GROUP BY ship.id ORDER BY ship.name %S';
     const a = this.buildParams(sql, params);
     return await DataSource.query(a);
+  }
+
+  static async countShipTypes() {
+    const sql = 'SELECT type, count(*) FROM ship group by type';
+    return await DataSource.query(sql);
   }
 
   static buildParams(sql, params) {

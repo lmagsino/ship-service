@@ -21,6 +21,21 @@ router.get('/query', async (ctx: Koa.Context) => {
   };
 });
 
+router.get('/summary', async (ctx: Koa.Context) => {
+  console.time('myFunction');
+
+  // Call the function
+  const summary = await shipService.getSummary();
+
+  console.timeEnd('myFunction');
+
+  if (!summary) {
+    ctx.throw(HttpStatus.NOT_FOUND);
+  }
+
+  ctx.body = summary;
+});
+
 router.get('/:ship_id', async (ctx: Koa.Context) => {
   const ship = await shipService.findOne(ctx.params.ship_id);
 
