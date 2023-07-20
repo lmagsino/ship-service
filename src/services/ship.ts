@@ -120,6 +120,10 @@ export default class ShipService {
     });
   }
 
+  static generateApiKey(secretVal) {
+    return btoa(secretVal);
+  }
+
   static findRole(roles, roleName) {
     return roles.find(role => role.name === roleName);
   }

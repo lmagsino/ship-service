@@ -2,6 +2,10 @@ import type * as Koa from 'koa';
 import Router from 'koa-router';
 import HttpStatus from 'http-status-codes';
 import shipService from '../services/ship';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config()
 
 const routerOpts: Router.IRouterOptions = {
   prefix: '/ships'
@@ -34,6 +38,17 @@ router.get('/summary', async (ctx: Koa.Context) => {
   }
 
   ctx.body = summary;
+});
+
+router.get('/generateApiKey', async (ctx: Koa.Context) => {
+  const jwtSecretKey = process.env.JWT_SECRET_KEY;
+  const data = {
+    clientId: process.env.JWT_CLIENT_ID
+  }
+
+  const token = jwt.sign(data, jwtSecretKey);
+
+  ctx.body = token;
 });
 
 router.get('/:ship_id', async (ctx: Koa.Context) => {
