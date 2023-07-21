@@ -1,7 +1,7 @@
 {
   "name": "ship-service",
   "version": "1.0.0",
-  "description": "NextPay Backend Coding Challenge",
+  "description": "Backend Coding Challenge",
   "main": "src/app.ts",
   "author": "Leo Magsino ",
   "license": "MIT",
@@ -12,33 +12,34 @@
     "lint": "eslint --ignore-path .eslintignore --ext .js,.ts ."
   },
   "dependencies": {
-    "@types/node-fetch": "^2.6.4",
-    "@types/pg": "^8.10.2",
-    "@types/pg-format": "^1.0.2",
     "dotenv": "^16.3.1",
     "jsonwebtoken": "^9.0.1",
     "koa": "^2.14.2",
     "koa-router": "^12.0.0",
     "node-fetch": "v2",
-    "pg-format": "^1.0.4"
+    "pg-format": "^1.0.4",
+    "koa-bodyparser": "^4.4.1",
+    "pg": "^8.11.1",
+    "typeorm": "^0.3.17"
+
   },
   "devDependencies": {
+    "typescript": "*",
+    "ts-node": "^10.9.1",
+    "eslint": "^8.0.1",
+    "eslint-config-standard-with-typescript": "^36.0.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "@types/node-fetch": "^2.6.4",
+    "@types/pg": "^8.10.2",
+    "@types/pg-format": "^1.0.2",
     "@types/http-status-codes": "^1.2.0",
     "@types/koa": "^2.13.6",
     "@types/koa-bodyparser": "^4.3.10",
     "@types/koa-router": "^7.4.4",
     "@types/node": "^20.4.2",
     "@typescript-eslint/eslint-plugin": "^5.50.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.0.1",
-    "eslint-config-standard-with-typescript": "^36.0.1",
-    "eslint-plugin-import": "^2.25.2",
-    "eslint-plugin-n": "^15.0.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "koa-bodyparser": "^4.4.1",
-    "pg": "^8.11.1",
-    "ts-node": "^10.9.1",
-    "typeorm": "^0.3.17",
-    "typescript": "*"
+    "@typescript-eslint/parser": "^6.0.0"
   }
 }
