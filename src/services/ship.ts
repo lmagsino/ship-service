@@ -6,7 +6,7 @@ export default class ShipService {
   static async storeData() {
     if (await this.hasExistingData()) return;
 
-    SpacexApi.getAll().then(async function (data) {
+    SpacexApi.getAll().then(async function (data: any[]) {
       const values1: any[] = []
       const values2: any[] = []
       const roles: any[] = []
@@ -50,7 +50,8 @@ export default class ShipService {
     const minYear = await ShipRepository.findMinYear();
     const maxYear = await ShipRepository.findMaxYear();
 
-    const shipTypesMapping = await ShipRepository.countShipTypes();
+    const shipTypesMapping: any[] = await ShipRepository.countShipTypes();
+
     const shipTypes = {};
     shipTypesMapping.forEach(shipType => {
       shipTypes[shipType.type] = shipType.count
@@ -69,7 +70,7 @@ export default class ShipService {
   }
 
   static async getSummary() {
-    const ships = await ShipRepository.findAll();
+    const ships: any[] = await ShipRepository.findAll();
     let countShips = 0;
     let countActive = 0;
     let countInactive = 0;
@@ -95,7 +96,7 @@ export default class ShipService {
       }
     });
 
-    const shipTypesMapping = await ShipRepository.countShipTypes();
+    const shipTypesMapping: any[] = await ShipRepository.countShipTypes();
     const shipTypes = {};
     shipTypesMapping.forEach(shipType => {
       shipTypes[shipType.type] = shipType.count
@@ -120,11 +121,11 @@ export default class ShipService {
     });
   }
 
-  static generateApiKey(secretVal) {
+  static generateApiKey(secretVal: string) {
     return btoa(secretVal);
   }
 
-  static findRole(roles, roleName) {
+  static findRole(roles, roleName: string) {
     return roles.find(role => role.name === roleName);
   }
 
@@ -134,12 +135,13 @@ export default class ShipService {
     if (ships.length !== 0) return true;
   }
 
-  static buildQueryMapping(params) {
+  static buildQueryMapping(params: any[]) {
     const mapping: any[] = []
 
     ShipRepository.queryMapping.forEach((queryMap) => {
-      const value = params[queryMap.queryName]
-      if (value) {
+      const value: string = params[queryMap.queryName]
+
+      if (value !== undefined) {
         mapping.push([queryMap.sqlFieldName, value, queryMap.special])
       }
     })

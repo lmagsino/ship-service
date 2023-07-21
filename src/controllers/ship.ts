@@ -29,7 +29,7 @@ router.get('/summary', async (ctx: Koa.Context) => {
   console.time('myFunction');
 
   // Call the function
-  const summary = await shipService.getSummary();
+  const summary = await shipService.getSummarySql();
 
   console.timeEnd('myFunction');
 

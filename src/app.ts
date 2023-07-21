@@ -1,7 +1,7 @@
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 
-import HttpStatus from 'http-status-codes';
+import HttpStatus, { INTERNAL_SERVER_ERROR } from 'http-status-codes';
 import Ship from './services/ship';
 import DataSource from './config/database';
 import shipController from './controllers/ship'
@@ -17,10 +17,13 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
   try {
     await next();
   } catch (error) {
-    ctx.status = error.statusCode ?? error.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
-    error.status = ctx.status;
+    console.log('test')
+    ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
     ctx.body = { error };
-    ctx.app.emit('error', error, ctx);
+    ctx.app.emit('error', error, ctx)
+    //   ctx.status = error.statusCode ?? error.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
+    //   error.status = ctx.status;
+    //   ctx.body = { error };
   }
 });
 app.use(bodyParser());

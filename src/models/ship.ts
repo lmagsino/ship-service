@@ -4,7 +4,7 @@ import Role from './role';
 @Entity()
 export default class Ship {
   @PrimaryColumn()
-    id: string
+    id: string;
 
   @Column({ nullable: true })
     name: string;
