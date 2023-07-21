@@ -6,7 +6,11 @@ import Ship from './services/ship';
 import DataSource from './config/database';
 import shipController from './controllers/ship'
 
+import jwtVerifier from './lib/jwtVerifier';
+
 const app = new Koa();
+
+app.use(jwtVerifier());
 
 // Generic error handling middleware.
 app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
