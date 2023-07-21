@@ -1,7 +1,7 @@
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 
-import HttpStatus, { INTERNAL_SERVER_ERROR } from 'http-status-codes';
+import HttpStatus from 'http-status-codes';
 import Ship from './services/ship';
 import DataSource from './config/database';
 import shipController from './controllers/ship'
