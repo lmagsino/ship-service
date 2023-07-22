@@ -20,6 +20,7 @@
     "node-fetch": "v2",
     "pg": "^8.11.1",
     "pg-format": "^1.0.4",
+    "typedi": "^0.10.0",
     "typeorm": "^0.3.17"
   },
   "devDependencies": {

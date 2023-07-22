@@ -4,7 +4,8 @@ import bodyParser from 'koa-bodyparser';
 import HttpStatus from 'http-status-codes';
 import Ship from './services/ship';
 import DataSource from './config/database';
-import shipController from './controllers/ship'
+import ShipRoute from './modules/ship/ship.route'
+import { Container } from 'typedi';
 
 import jwtVerifier from './lib/jwtVerifier';
 
@@ -28,9 +29,14 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
 });
 app.use(bodyParser());
 
-// Route middleware.
-app.use(shipController.routes());
-app.use(shipController.allowedMethods());
+function routes() {
+  const shipRoute = Container.get(ShipRoute);
+
+  app.use(shipRoute.getRouter().routes());
+  app.use(shipRoute.getRouter().allowedMethods());
+}
+
+routes();
 
 // Application error logging.
 app.on('error', console.error);
