@@ -3,6 +3,7 @@ import { Service } from 'typedi';
 import DataSource from '../../config/database';
 import { type Query } from '../../enums/query';
 import QueryUtils from '../../utils/QueryUtils';
+import format from 'pg-format';
 
 @Service()
 export default class ShipRepository {
@@ -19,5 +20,11 @@ export default class ShipRepository {
     const formattedQuery =
       QueryUtils.formatDynamicQuery(query, sqlQueryMapping);
     return await DataSource.query(formattedQuery);
+  }
+
+  async insertMany(query: Query, values: any[][]) {
+    const sql = format(query, values);
+
+    return await DataSource.query(sql);
   }
 }

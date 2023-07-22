@@ -4,6 +4,8 @@ import type Ship from './ship.model';
 import ShipSummary from './ship.summary';
 import ObjectUtils from '../../utils/ObjectUtils';
 import { Query } from '../../enums/query';
+import SpacexApi from '../../api/SpacexApi';
+import RoleRepository from '../role/role.repository';
 
 @Service()
 export default class ShipService {
@@ -12,6 +14,9 @@ export default class ShipService {
 
   @Inject()
     shipSummary: ShipSummary;
+
+  @Inject()
+    roleRepository: RoleRepository;
 
   private readonly dynamicQueryMapping = [
     { queryName: 'type', sqlFieldName: 'ship.type' },
@@ -64,6 +69,30 @@ export default class ShipService {
     return ship;
   }
 
+  public async saveDataByBatch() {
+    if (await this.hasExistingData()) return;
+
+    const ships: any[] = [];
+    const shipRoles: any[] = [];
+    const roles: any[] = [];
+
+    const shipData = await SpacexApi.getAll();
+
+    shipData.forEach(obj => {
+      ships.push([obj.id, obj.name, obj.type, obj.year_built, obj.active]);
+      shipRoles.push([obj.id, obj.roles])
+      roles.push(obj.roles)
+    });
+
+    const insertedRoles = await this.createRoles(roles);
+    await this.shipRepository.insertMany(Query.INSERT_SHIPS, ships);
+
+    const shipRoleMapping =
+      this.createShipRoleMapping(insertedRoles, shipRoles);
+
+    await this.shipRepository.insertMany(Query.INSERT_SHIP_ROLES, shipRoleMapping);
+  }
+
   private getMinYear(previousMinYear: number, newYear: number) {
     const minYear =
       ((previousMinYear === 0) || (newYear < previousMinYear))
@@ -111,5 +140,42 @@ export default class ShipService {
       }
     })
     return sqlQueryMapping;
+  }
+
+  private async hasExistingData() {
+    const ships: Ship[] = await this.shipRepository.find(Query.FIND_ALL_SHIPS);
+    return ships.length !== 0;
+  }
+
+  private formatRoles(roles) {
+    const uniqueRoles: any[] = [...new Set(roles.flat())];
+    return uniqueRoles.map(role => {
+      return [role];
+    });
+  }
+
+  private findRole(roles: any, roleName: string) {
+    return roles.find(role => role.name === roleName);
+  }
+
+  private async createRoles(roles: any[]) {
+    const formattedRoles = this.formatRoles(roles);
+    const insertedRoles =
+      await this.roleRepository.insertMany(Query.INSERT_ROLES, formattedRoles);
+
+    return insertedRoles;
+  }
+
+  private createShipRoleMapping(insertedRoles: any[], shipRoles: any[]) {
+    const shipRoleMapping: any[] = [];
+    shipRoles.forEach(shipRole => {
+      shipRole[1].forEach(role => {
+        const roleObj = this.findRole(insertedRoles, role);
+        if (ObjectUtils.isNull(roleObj)) { return; }
+        shipRoleMapping.push([shipRole[0], roleObj.id]);
+      })
+    })
+
+    return shipRoleMapping;
   }
 }
