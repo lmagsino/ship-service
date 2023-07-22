@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import ShipRepository from './ship.repository';
-import type Ship from '../../models/ship';
+import type Ship from './ship.model';
 import ShipSummary from './ship.summary';
 import ObjectUtils from '../../utils/ObjectUtils';
 import { Query } from '../../enums/query';
@@ -12,6 +12,16 @@ export default class ShipService {
 
   @Inject()
     shipSummary: ShipSummary;
+
+  private readonly dynamicQueryMapping = [
+    { queryName: 'type', sqlFieldName: 'ship.type' },
+    { queryName: 'name', sqlFieldName: 'ship.name' },
+    { queryName: 'role', sqlFieldName: 'role.name', special: ['starts_with'] },
+    { queryName: 'year_built_start', sqlFieldName: 'ship.year_built', special: ['greater_than_equal'] },
+    { queryName: 'year_built_end', sqlFieldName: 'ship.year_built', special: ['less_than_equal'] },
+    { queryName: 'page', special: ['page'] },
+    { queryName: 'pageSize', special: ['page_size'] }
+  ]
 
   public async getSummary() {
     const ships: Ship[] = await this.shipRepository.find(Query.FIND_ALL_SHIPS);
@@ -45,6 +55,15 @@ export default class ShipService {
     return ship;
   }
 
+  public async getByDynamicQuery(params) {
+    const sqlQueryMapping = this.getSqlQueryMapping(params);
+    const ship: Ship =
+      await this.shipRepository.findByDynamicQuery(
+        Query.FIND_BY_DYNAMIC_QUERY, sqlQueryMapping
+      );
+    return ship;
+  }
+
   private getMinYear(previousMinYear: number, newYear: number) {
     const minYear =
       ((previousMinYear === 0) || (newYear < previousMinYear))
@@ -73,5 +92,24 @@ export default class ShipService {
     })
 
     return shipTypes;
+  }
+
+  private getSqlQueryMapping(params: unknown[]) {
+    const sqlQueryMapping: unknown[] = []
+
+    this.dynamicQueryMapping.forEach((dynamicQueryMap) => {
+      const queryValue: string = params[dynamicQueryMap.queryName];
+
+      if (ObjectUtils.isNotNull(queryValue)) {
+        sqlQueryMapping.push(
+          {
+            sqlFieldName: dynamicQueryMap.sqlFieldName,
+            queryValue,
+            special: dynamicQueryMap.special
+          }
+        );
+      }
+    })
+    return sqlQueryMapping;
   }
 }

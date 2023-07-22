@@ -4,7 +4,7 @@ import { Inject, Service } from 'typedi';
 import ShipService from './ship.service';
 import type ShipSummary from './ship.summary';
 import ObjectUtils from '../../utils/ObjectUtils';
-import type Ship from '../../models/ship';
+import type Ship from './ship.model';
 
 @Service()
 export default class ShipController {
@@ -19,6 +19,16 @@ export default class ShipController {
     }
 
     ctx.body = summary.decorated();
+  }
+
+  public async getByDynamicQuery(ctx: Koa.Context) {
+    const ships = await this.shipService.getByDynamicQuery(ctx.query);
+
+    if (ObjectUtils.isNull(ships)) {
+      ctx.throw(HttpStatus.NOT_FOUND);
+    }
+
+    ctx.body = { ships };
   }
 
   public async getById(ctx: Koa.Context) {
