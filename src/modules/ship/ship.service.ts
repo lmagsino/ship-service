@@ -14,7 +14,7 @@ export default class ShipService {
     shipSummary: ShipSummary;
 
   public async getSummary() {
-    const ships: Ship[] = await this.shipRepository.find(Query.FIND_ALL);
+    const ships: Ship[] = await this.shipRepository.find(Query.FIND_ALL_SHIPS);
     const totalShips: number = ships.length;
     let totalActiveShips: number = 0;
     let totalInactiveShips: number = 0;
@@ -40,6 +40,11 @@ export default class ShipService {
     return this.shipSummary;
   }
 
+  public async getById(id: string) {
+    const ship: Ship = await this.shipRepository.findOne(Query.FIND_SHIP, id);
+    return ship;
+  }
+
   private getMinYear(previousMinYear: number, newYear: number) {
     const minYear =
       ((previousMinYear === 0) || (newYear < previousMinYear))
@@ -60,7 +65,7 @@ export default class ShipService {
 
   private async getShipTypes() {
     const shipTypesMapping =
-      await this.shipRepository.find(Query.FIND_ALL_GROUP_BY_TYPE);
+      await this.shipRepository.find(Query.FIND_ALL_SHIPS_GROUP_BY_TYPE);
 
     const shipTypes = {};
     shipTypesMapping.forEach(shipType => {

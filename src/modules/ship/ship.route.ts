@@ -24,6 +24,10 @@ export default class ShipRoute {
       await this.shipController.getSummary(ctx);
     });
 
+    this.router.get('/:ship_id', async (ctx: Koa.Context) => {
+      await this.shipController.getById(ctx);
+    });
+
     return this.router;
   }
 }

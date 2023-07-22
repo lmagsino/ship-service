@@ -4,6 +4,7 @@ import { Inject, Service } from 'typedi';
 import ShipService from './ship.service';
 import type ShipSummary from './ship.summary';
 import ObjectUtils from '../../utils/ObjectUtils';
+import type Ship from '../../models/ship';
 
 @Service()
 export default class ShipController {
@@ -18,5 +19,15 @@ export default class ShipController {
     }
 
     ctx.body = summary.decorated();
+  }
+
+  public async getById(ctx: Koa.Context) {
+    const ship: Ship = await this.shipService.getById(ctx.params.ship_id);
+
+    if (ObjectUtils.isNull(ship)) {
+      ctx.throw(HttpStatus.NOT_FOUND);
+    }
+
+    ctx.body = ship;
   }
 }
