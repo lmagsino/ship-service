@@ -1,0 +1,3 @@
+export enum SpecialQuery {
+  STARTS_WITH, GREATER_THAN_EQUAL, LESS_THAN_EQUAL, PAGE_SIZE, PAGE
+}
