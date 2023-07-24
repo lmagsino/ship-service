@@ -6,6 +6,7 @@ import ObjectUtils from '../../utils/ObjectUtils';
 import { Query } from '../../enums/query';
 import SpacexApi from '../../api/SpacexApi';
 import RoleRepository from '../role/role.repository';
+import { SpecialQuery } from '../../enums/special_query';
 
 @Service()
 export default class ShipService {
@@ -21,11 +22,11 @@ export default class ShipService {
   private readonly dynamicQueryMapping = [
     { queryName: 'type', sqlFieldName: 'ship.type' },
     { queryName: 'name', sqlFieldName: 'ship.name' },
-    { queryName: 'role', sqlFieldName: 'role.name', special: ['starts_with'] },
-    { queryName: 'year_built_start', sqlFieldName: 'ship.year_built', special: ['greater_than_equal'] },
-    { queryName: 'year_built_end', sqlFieldName: 'ship.year_built', special: ['less_than_equal'] },
-    { queryName: 'page', special: ['page'] },
-    { queryName: 'pageSize', special: ['page_size'] }
+    { queryName: 'role', sqlFieldName: 'role.name', special: [SpecialQuery.STARTS_WITH] },
+    { queryName: 'year_built_start', sqlFieldName: 'ship.year_built', special: [SpecialQuery.GREATER_THAN_EQUAL] },
+    { queryName: 'year_built_end', sqlFieldName: 'ship.year_built', special: [SpecialQuery.LESS_THAN_EQUAL] },
+    { queryName: 'page', special: [SpecialQuery.PAGE] },
+    { queryName: 'page_size', special: [SpecialQuery.PAGE_SIZE] }
   ]
 
   public async getSummary() {
@@ -139,6 +140,8 @@ export default class ShipService {
         );
       }
     })
+    console.log('test');
+    console.log(sqlQueryMapping)
     return sqlQueryMapping;
   }
 

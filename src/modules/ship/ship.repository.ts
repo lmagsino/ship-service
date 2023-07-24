@@ -23,6 +23,7 @@ export default class ShipRepository {
   async findByDynamicQuery(query: Query, sqlQueryMapping: unknown[]) {
     const formattedQuery =
       QueryUtils.formatDynamicQuery(query, sqlQueryMapping);
+    console.log(formattedQuery);
     return await DataSource.query(formattedQuery);
   }
 

@@ -38,6 +38,11 @@ export default class QueryUtils {
 
     const pageFilterParams: string =
       this.createPageFilterParams(pageSize, page);
+
+    if (ObjectUtils.isNotNull(filterParams)) {
+      filterParams = 'WHERE ' + filterParams;
+    }
+
     return query.replace('%F', filterParams).replace('%P', pageFilterParams);
   }
 
