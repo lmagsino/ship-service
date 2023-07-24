@@ -4,6 +4,8 @@ import { describe, it, expect, beforeEach } from '@jest/globals';
 import {createMockContext} from '@shopify/jest-koa-mocks';
 import ShipController from '../src/modules/ship/ship.controller';
 import mockSummaryObject from "./mocks/mockSummaryObject";
+import mockShip from "./mocks/mockShip";
+import mockSummary from "./mocks/mockSummary";
 
 jest.mock('../src/modules/ship/ship.service');
 
@@ -29,25 +31,27 @@ import ShipService from '../src/modules/ship/ship.service';
       mockFetchSummary.mockImplementation(
          jest.fn().mockResolvedValue(mockSummaryObject)
       );
+
       await shipController.getSummary(ctx);
+
       expect(mockFetchSummary).toHaveBeenCalledTimes(1);
       expect(ctx.status).toEqual(200);
+      expect(ctx.body).toEqual(mockSummary);
+   });
 
-      const summary = {
-         "total_ships":29,
-         "total_active_ships":15,
-         "total_inactive_ships":14,
-         "ship_types":{
-            "Barge":4,
-            "Cargo":11,
-            "High Speed Craft":2,
-            "Tug":12
-         },
-         "min_year_built":1944,
-         "max_year_built":2021,
-      }
+   it('should get by id', async () => {
+      const mockFetchById = jest.spyOn(shipService, 'getById');
 
-      expect(ctx.body).toEqual(summary);
+      mockFetchById.mockImplementation(
+         jest.fn().mockResolvedValue(mockShip)
+      );
+
+      ctx.params = {ship_id : '5ea6ed2d080df4000697c901'};
+      await shipController.getById(ctx);
+
+      expect(mockFetchById).toHaveBeenCalledTimes(1);
+      expect(ctx.status).toEqual(200);
+      expect(ctx.body).toEqual(mockShip);
 
    });
  })

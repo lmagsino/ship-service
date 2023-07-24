@@ -140,8 +140,7 @@ export default class ShipService {
         );
       }
     })
-    console.log('test');
-    console.log(sqlQueryMapping)
+
     return sqlQueryMapping;
   }
 
