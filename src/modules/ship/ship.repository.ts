@@ -28,7 +28,15 @@ export default class ShipRepository {
     return await DataSource.query(formattedQuery);
   }
 
-  async insertMany(query: Query, values: any[][]) {
+  async insertManyShip(values: any[][]) {
+    return await this.insertMany(Query.INSERT_SHIPS, values);
+  }
+
+  async insertManyShipRoles(values: any[][]) {
+    return await this.insertMany(Query.INSERT_SHIP_ROLES, values);
+  }
+
+  private async insertMany(query: Query, values: any[][]) {
     const sql = format(query, values);
 
     return await DataSource.query(sql);

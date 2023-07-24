@@ -11,7 +11,7 @@ import mockShipsByType from "./mocks/mockShipsByType";
 
 jest.mock('../src/modules/ship/ship.service');
 
-import ShipService from '../src/modules/ship/ship.service';
+import ShipService from "../src/modules/ship/ship.service";
 
  describe('Ship Controller', () => {
 

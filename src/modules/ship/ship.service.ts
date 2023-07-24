@@ -86,12 +86,12 @@ export default class ShipService {
     });
 
     const insertedRoles = await this.createRoles(roles);
-    await this.shipRepository.insertMany(Query.INSERT_SHIPS, ships);
+    await this.shipRepository.insertManyShip(ships);
 
     const shipRoleMapping =
       this.createShipRoleMapping(insertedRoles, shipRoles);
 
-    await this.shipRepository.insertMany(Query.INSERT_SHIP_ROLES, shipRoleMapping);
+    await this.shipRepository.insertManyShipRoles(shipRoleMapping);
   }
 
   private getMinYear(previousMinYear: number, newYear: number) {
