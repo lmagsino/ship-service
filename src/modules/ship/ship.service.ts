@@ -29,7 +29,7 @@ export default class ShipService {
   ]
 
   public async getSummary() {
-    const ships: Ship[] = await this.shipRepository.find(Query.FIND_ALL_SHIPS);
+    const ships: Ship[] = await this.shipRepository.findAll();
     const totalShips: number = ships.length;
     let totalActiveShips: number = 0;
     let totalInactiveShips: number = 0;
@@ -113,7 +113,7 @@ export default class ShipService {
 
   private async getShipTypes() {
     const shipTypesMapping =
-      await this.shipRepository.find(Query.FIND_ALL_SHIPS_GROUP_BY_TYPE);
+      await this.shipRepository.findAllGroupByType();
 
     const shipTypes = {};
     shipTypesMapping.forEach(shipType => {
@@ -143,7 +143,7 @@ export default class ShipService {
   }
 
   private async hasExistingData() {
-    const ships: Ship[] = await this.shipRepository.find(Query.FIND_ALL_SHIPS);
+    const ships: Ship[] = await this.shipRepository.findAll();
     return ships.length !== 0;
   }
 
