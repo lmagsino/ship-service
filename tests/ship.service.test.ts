@@ -7,6 +7,7 @@ import mockShips from "./mocks/mockShips";
 import mockSummaryObject from "./mocks/mockSummaryObject";
 import mockShipTypes from "./mocks/mockShipTypes";
 import mockShip from "./mocks/mockShip";
+import mockShipsByType from "./mocks/mockShipsByType";
 
 
 jest.mock('../src/modules/ship/ship.repository');
@@ -54,6 +55,20 @@ import ShipRepository from '../src/modules/ship/ship.repository';
 
       const ship = await shipService.getById('5ea6ed2d080df4000697c901');
       expect(ship).toEqual(mockShip);
+
+    });
+
+    it('should get by type', async () => {
+      const mockFindAllByDynamicQuery =
+        jest.spyOn(shipRepository, 'findByDynamicQuery');
+
+      mockFindAllByDynamicQuery.mockImplementation(
+          jest.fn().mockResolvedValue(mockShipsByType)
+      );
+
+      const params = {type: 'Cargo'};
+      const ships = await shipService.getByDynamicQuery(params);
+      expect(ships).toEqual(mockShipsByType);
 
     });
  })

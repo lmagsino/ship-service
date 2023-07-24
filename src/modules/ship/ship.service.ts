@@ -63,11 +63,11 @@ export default class ShipService {
 
   public async getByDynamicQuery(params) {
     const sqlQueryMapping = this.getSqlQueryMapping(params);
-    const ship: Ship =
+    const ships: Ship[] =
       await this.shipRepository.findByDynamicQuery(
         Query.FIND_BY_DYNAMIC_QUERY, sqlQueryMapping
       );
-    return ship;
+    return ships;
   }
 
   public async saveDataByBatch() {

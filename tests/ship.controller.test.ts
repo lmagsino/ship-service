@@ -6,6 +6,8 @@ import ShipController from '../src/modules/ship/ship.controller';
 import mockSummaryObject from "./mocks/mockSummaryObject";
 import mockShip from "./mocks/mockShip";
 import mockSummary from "./mocks/mockSummary";
+import mockShipsByType from "./mocks/mockShipsByType";
+
 
 jest.mock('../src/modules/ship/ship.service');
 
@@ -52,6 +54,21 @@ import ShipService from '../src/modules/ship/ship.service';
       expect(mockFetchById).toHaveBeenCalledTimes(1);
       expect(ctx.status).toEqual(200);
       expect(ctx.body).toEqual(mockShip);
+
+   });
+
+   it('should get by type', async () => {
+      const mockFetchByType = jest.spyOn(shipService, 'getByDynamicQuery');
+
+      mockFetchByType.mockImplementation(
+         jest.fn().mockResolvedValue(mockShipsByType)
+      );
+
+      await shipController.getByDynamicQuery(ctx);
+
+      expect(mockFetchByType).toHaveBeenCalledTimes(1);
+      expect(ctx.status).toEqual(200);
+      expect(ctx.body).toEqual({ships: mockShipsByType});
 
    });
  })
