@@ -63,8 +63,8 @@ export default class ShipSummary {
       total_active_ships: this.totalActiveShips,
       total_inactive_ships: this.totalInactiveShips,
       ship_types: this.shipTypes,
-      min_year: this.minYear,
-      max_year: this.maxYear
+      min_year_built: this.minYear,
+      max_year_built: this.maxYear
     }
   }
 }

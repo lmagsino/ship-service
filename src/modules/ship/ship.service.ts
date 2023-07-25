@@ -6,6 +6,7 @@ import ObjectUtils from '../../utils/ObjectUtils';
 import { Query } from '../../enums/query';
 import SpacexApi from '../../api/SpacexApi';
 import RoleRepository from '../role/role.repository';
+import { SpecialQuery } from '../../enums/special_query';
 
 @Service()
 export default class ShipService {
@@ -21,15 +22,15 @@ export default class ShipService {
   private readonly dynamicQueryMapping = [
     { queryName: 'type', sqlFieldName: 'ship.type' },
     { queryName: 'name', sqlFieldName: 'ship.name' },
-    { queryName: 'role', sqlFieldName: 'role.name', special: ['starts_with'] },
-    { queryName: 'year_built_start', sqlFieldName: 'ship.year_built', special: ['greater_than_equal'] },
-    { queryName: 'year_built_end', sqlFieldName: 'ship.year_built', special: ['less_than_equal'] },
-    { queryName: 'page', special: ['page'] },
-    { queryName: 'pageSize', special: ['page_size'] }
+    { queryName: 'role', sqlFieldName: 'role.name', special: [SpecialQuery.STARTS_WITH] },
+    { queryName: 'year_built_start', sqlFieldName: 'ship.year_built', special: [SpecialQuery.GREATER_THAN_EQUAL] },
+    { queryName: 'year_built_end', sqlFieldName: 'ship.year_built', special: [SpecialQuery.LESS_THAN_EQUAL] },
+    { queryName: 'page', special: [SpecialQuery.PAGE] },
+    { queryName: 'page_size', special: [SpecialQuery.PAGE_SIZE] }
   ]
 
   public async getSummary() {
-    const ships: Ship[] = await this.shipRepository.find(Query.FIND_ALL_SHIPS);
+    const ships: Ship[] = await this.shipRepository.findAll();
     const totalShips: number = ships.length;
     let totalActiveShips: number = 0;
     let totalInactiveShips: number = 0;
@@ -62,11 +63,11 @@ export default class ShipService {
 
   public async getByDynamicQuery(params) {
     const sqlQueryMapping = this.getSqlQueryMapping(params);
-    const ship: Ship =
+    const ships: Ship[] =
       await this.shipRepository.findByDynamicQuery(
         Query.FIND_BY_DYNAMIC_QUERY, sqlQueryMapping
       );
-    return ship;
+    return ships;
   }
 
   public async saveDataByBatch() {
@@ -85,12 +86,12 @@ export default class ShipService {
     });
 
     const insertedRoles = await this.createRoles(roles);
-    await this.shipRepository.insertMany(Query.INSERT_SHIPS, ships);
+    await this.shipRepository.insertManyShip(ships);
 
     const shipRoleMapping =
       this.createShipRoleMapping(insertedRoles, shipRoles);
 
-    await this.shipRepository.insertMany(Query.INSERT_SHIP_ROLES, shipRoleMapping);
+    await this.shipRepository.insertManyShipRoles(shipRoleMapping);
   }
 
   private getMinYear(previousMinYear: number, newYear: number) {
@@ -113,7 +114,7 @@ export default class ShipService {
 
   private async getShipTypes() {
     const shipTypesMapping =
-      await this.shipRepository.find(Query.FIND_ALL_SHIPS_GROUP_BY_TYPE);
+      await this.shipRepository.findAllGroupByType();
 
     const shipTypes = {};
     shipTypesMapping.forEach(shipType => {
@@ -139,11 +140,12 @@ export default class ShipService {
         );
       }
     })
+
     return sqlQueryMapping;
   }
 
   private async hasExistingData() {
-    const ships: Ship[] = await this.shipRepository.find(Query.FIND_ALL_SHIPS);
+    const ships: Ship[] = await this.shipRepository.findAll();
     return ships.length !== 0;
   }
 
