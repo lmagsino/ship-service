@@ -8,11 +8,22 @@ import { Container } from 'typedi';
 
 import Jwt from './middleware/jwt';
 import ShipService from './modules/ship/ship.service';
+import yamljs from 'yamljs';
+import { koaSwagger } from 'koa2-swagger-ui';
+import Router from 'koa-router';
 
 const app = new Koa();
 
+const router = new Router();
+const ALLOW_URL = ['/docs', '/favicon.png'];
+
 function middleware() {
-  app.use(Jwt.verifier());
+  // .load loads file from root.
+  const spec = yamljs.load('./openapi.yaml');
+  router.get('/docs', koaSwagger({ routePrefix: false, swaggerOptions: { spec } }));
+
+  app.use(Jwt.verifier(ALLOW_URL));
+  app.use(router.routes());
   app.use(bodyParser());
 }
 
