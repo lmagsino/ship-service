@@ -16,13 +16,22 @@ export default class QueryUtils {
       if (ObjectUtils.isNotNull(sqlQueryMap.special)) {
         switch (sqlQueryMap.special[0]) {
           case SpecialQuery.STARTS_WITH:
-            filterParams += this.createStartsWithQuery(sqlQueryMap);
+            filterParams +=
+              this.createStartsWithQuery(
+                sqlQueryMap.sqlFieldName, sqlQueryMap.queryValue
+              );
             break;
           case SpecialQuery.GREATER_THAN_EQUAL:
-            filterParams += this.createGreaterThanEqualQuery(sqlQueryMap);
+            filterParams +=
+              this.createGreaterThanEqualQuery(
+                sqlQueryMap.sqlFieldName, sqlQueryMap.queryValue
+              );
             break;
           case SpecialQuery.LESS_THAN_EQUAL:
-            filterParams += this.createLessThanEqualQuery(sqlQueryMap);
+            filterParams +=
+              this.createLessThanEqualQuery(
+                sqlQueryMap.sqlFieldName, sqlQueryMap.queryValue
+              );
             break;
           case SpecialQuery.PAGE_SIZE:
             pageSize = Number(sqlQueryMap.queryValue);
@@ -32,7 +41,8 @@ export default class QueryUtils {
             break;
         }
       } else {
-        filterParams += this.createQuery(sqlQueryMap);
+        filterParams +=
+          this.createQuery(sqlQueryMap.sqlFieldName, sqlQueryMap.queryValue);
       }
     })
 
@@ -59,19 +69,19 @@ export default class QueryUtils {
     return pageFilterParams;
   }
 
-  private static createStartsWithQuery(sqlQueryMap: any) {
-    return ` ${sqlQueryMap.sqlFieldName} LIKE '${sqlQueryMap.queryValue}%'`;
+  private static createStartsWithQuery(field: string, value: string) {
+    return ` ${field} LIKE '${value}%'`;
   }
 
-  private static createGreaterThanEqualQuery(sqlQueryMap: any) {
-    return ` ${sqlQueryMap.sqlFieldName} >= ${sqlQueryMap.queryValue}`;
+  private static createGreaterThanEqualQuery(field: string, value: string) {
+    return ` ${field} >= ${value}`;
   }
 
-  private static createLessThanEqualQuery(sqlQueryMap: any) {
-    return ` ${sqlQueryMap.sqlFieldName} <= ${sqlQueryMap.queryValue}`;
+  private static createLessThanEqualQuery(field: string, value: string) {
+    return ` ${field} <= ${value}`;
   }
 
-  private static createQuery(sqlQueryMap: any) {
-    return ` ${sqlQueryMap.sqlFieldName} = '${sqlQueryMap.queryValue}'`;
+  private static createQuery(field: string, value: string) {
+    return ` ${field} = '${value}'`;
   }
 }

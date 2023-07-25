@@ -17,14 +17,12 @@ export default class ShipRepository {
 
   async findOne(query: Query, id: string) {
     const ships = await DataSource.query(query, [id]);
-    console.log(await ships[0])
     return ships[0];
   }
 
   async findByDynamicQuery(query: Query, sqlQueryMapping: unknown[]) {
     const formattedQuery =
       QueryUtils.formatDynamicQuery(query, sqlQueryMapping);
-    console.log(formattedQuery);
     return await DataSource.query(formattedQuery);
   }
 

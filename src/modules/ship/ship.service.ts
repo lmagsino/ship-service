@@ -91,7 +91,7 @@ export default class ShipService {
     const shipRoleMapping =
       this.createShipRoleMapping(insertedRoles, shipRoles);
 
-    await this.shipRepository.insertManyShipRoles(shipRoleMapping);
+    return await this.shipRepository.insertManyShipRoles(shipRoleMapping);
   }
 
   private getMinYear(previousMinYear: number, newYear: number) {

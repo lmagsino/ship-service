@@ -1,75 +1,70 @@
 import 'reflect-metadata';
 
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import {createMockContext} from '@shopify/jest-koa-mocks';
+import { createMockContext } from '@shopify/jest-koa-mocks';
 import ShipController from '../src/modules/ship/ship.controller';
-import mockSummaryObject from "./mocks/mockSummaryObject";
-import mockShip from "./mocks/mockShip";
-import mockSummary from "./mocks/mockSummary";
-import mockShipsByType from "./mocks/mockShipsByType";
+import mockSummaryObject from './mocks/mockSummaryObject';
+import mockShip from './mocks/mockShip';
+import mockSummary from './mocks/mockSummary';
+import mockShipsByType from './mocks/mockShipsByType';
 
+import ShipService from '../src/modules/ship/ship.service';
 
 jest.mock('../src/modules/ship/ship.service');
 
-import ShipService from "../src/modules/ship/ship.service";
+describe('Ship Controller', () => {
+  let shipController: ShipController;
+  let shipService: ShipService;
+  let ctx;
 
- describe('Ship Controller', () => {
+  beforeEach(async () => {
+    shipController = new ShipController();
+    shipService = new ShipService();
 
-   let shipController: ShipController;
-   let shipService: ShipService;
-   let ctx;
+    shipController.shipService = shipService;
+    ctx = createMockContext();
+  })
 
-   beforeEach(async () => {
-      shipController = new ShipController();
-      shipService = new ShipService();
+  it('should get summary', async () => {
+    const mockFetchSummary = jest.spyOn(shipService, 'getSummary');
 
-      shipController.shipService = shipService;
-      ctx = createMockContext();
-   })
+    mockFetchSummary.mockImplementation(
+      jest.fn().mockResolvedValue(mockSummaryObject)
+    );
 
-    it('should get summary', async () => {
-      const mockFetchSummary = jest.spyOn(shipService, 'getSummary');
+    await shipController.getSummary(ctx);
 
-      mockFetchSummary.mockImplementation(
-         jest.fn().mockResolvedValue(mockSummaryObject)
-      );
+    expect(mockFetchSummary).toHaveBeenCalledTimes(1);
+    expect(ctx.status).toEqual(200);
+    expect(ctx.body).toEqual(mockSummary);
+  });
 
-      await shipController.getSummary(ctx);
+  it('should get by id', async () => {
+    const mockFetchById = jest.spyOn(shipService, 'getById');
 
-      expect(mockFetchSummary).toHaveBeenCalledTimes(1);
-      expect(ctx.status).toEqual(200);
-      expect(ctx.body).toEqual(mockSummary);
-   });
+    mockFetchById.mockImplementation(
+      jest.fn().mockResolvedValue(mockShip)
+    );
 
-   it('should get by id', async () => {
-      const mockFetchById = jest.spyOn(shipService, 'getById');
+    ctx.params = { ship_id: '5ea6ed2d080df4000697c901' };
+    await shipController.getById(ctx);
 
-      mockFetchById.mockImplementation(
-         jest.fn().mockResolvedValue(mockShip)
-      );
+    expect(mockFetchById).toHaveBeenCalledTimes(1);
+    expect(ctx.status).toEqual(200);
+    expect(ctx.body).toEqual(mockShip);
+  });
 
-      ctx.params = {ship_id : '5ea6ed2d080df4000697c901'};
-      await shipController.getById(ctx);
+  it('should get by type', async () => {
+    const mockFetchByType = jest.spyOn(shipService, 'getByDynamicQuery');
 
-      expect(mockFetchById).toHaveBeenCalledTimes(1);
-      expect(ctx.status).toEqual(200);
-      expect(ctx.body).toEqual(mockShip);
+    mockFetchByType.mockImplementation(
+      jest.fn().mockResolvedValue(mockShipsByType)
+    );
 
-   });
+    await shipController.getByDynamicQuery(ctx);
 
-   it('should get by type', async () => {
-      const mockFetchByType = jest.spyOn(shipService, 'getByDynamicQuery');
-
-      mockFetchByType.mockImplementation(
-         jest.fn().mockResolvedValue(mockShipsByType)
-      );
-
-      await shipController.getByDynamicQuery(ctx);
-
-      expect(mockFetchByType).toHaveBeenCalledTimes(1);
-      expect(ctx.status).toEqual(200);
-      expect(ctx.body).toEqual({ships: mockShipsByType});
-
-   });
- })
-
+    expect(mockFetchByType).toHaveBeenCalledTimes(1);
+    expect(ctx.status).toEqual(200);
+    expect(ctx.body).toEqual({ ships: mockShipsByType });
+  });
+})

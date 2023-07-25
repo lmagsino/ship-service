@@ -36,7 +36,7 @@ function routes() {
 
 function initialize() {
   DataSource.initialize().then(async () => {
-    const PORT: number = Number(process.env.PORT) || 3000;
+    const PORT: number = Number(process.env.PORT);
     app.listen(PORT);
 
     const shipService = Container.get(ShipService);
