@@ -21,8 +21,8 @@ export default class ShipService {
 
   private readonly dynamicQueryMapping = [
     { queryName: 'type', sqlFieldName: 'ship.type' },
-    { queryName: 'name', sqlFieldName: 'ship.name' },
-    { queryName: 'role', sqlFieldName: 'role.name', special: [SpecialQuery.STARTS_WITH] },
+    { queryName: 'name', sqlFieldName: 'ship.name', special: [SpecialQuery.STARTS_WITH] },
+    { queryName: 'role', sqlFieldName: 'role.name' },
     { queryName: 'year_built_start', sqlFieldName: 'ship.year_built', special: [SpecialQuery.GREATER_THAN_EQUAL] },
     { queryName: 'year_built_end', sqlFieldName: 'ship.year_built', special: [SpecialQuery.LESS_THAN_EQUAL] },
     { queryName: 'page', special: [SpecialQuery.PAGE] },
@@ -129,7 +129,6 @@ export default class ShipService {
 
     this.dynamicQueryMapping.forEach((dynamicQueryMap) => {
       const queryValue: string = params[dynamicQueryMap.queryName];
-
       if (ObjectUtils.isNotNull(queryValue)) {
         sqlQueryMapping.push(
           {

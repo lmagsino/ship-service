@@ -70,7 +70,7 @@ export default class QueryUtils {
   }
 
   private static createStartsWithQuery(field: string, value: string) {
-    return ` ${field} LIKE '${value}%'`;
+    return ` LOWER(${field}) LIKE LOWER('${value}%')`;
   }
 
   private static createGreaterThanEqualQuery(field: string, value: string) {
@@ -82,6 +82,6 @@ export default class QueryUtils {
   }
 
   private static createQuery(field: string, value: string) {
-    return ` ${field} = '${value}'`;
+    return ` LOWER(${field}) = LOWER('${value}')`;
   }
 }

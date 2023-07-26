@@ -36,7 +36,6 @@ export default class ShipRepository {
 
   private async insertMany(query: Query, values: any[][]) {
     const sql = format(query, values);
-
     return await DataSource.query(sql);
   }
 
