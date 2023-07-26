@@ -74,6 +74,8 @@ export default class ShipService {
           Query.FIND_ROLES_BY_SHIP_ID,
           ship.id
         );
+
+      if (ObjectUtils.isNull(roles)) continue;
       const roleNames = roles.map(role => { return role.name; });
       ship.roles = roleNames;
     }
