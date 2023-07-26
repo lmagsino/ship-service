@@ -4,34 +4,33 @@ import bodyParser from 'koa-bodyparser';
 import HttpStatus from 'http-status-codes';
 import DataSource from './config/database';
 import ShipRoute from './modules/ship/ship.route'
+import AuthRoute from './modules/authorization/auth.route';
+import DocsRoute from './modules/documentation/docs.route';
 import { Container } from 'typedi';
 
 import Jwt from './middleware/jwt';
 import ShipService from './modules/ship/ship.service';
-import yamljs from 'yamljs';
-import { koaSwagger } from 'koa2-swagger-ui';
-import Router from 'koa-router';
 
 const app = new Koa();
 
-const router = new Router();
-const ALLOW_URL = ['/docs', '/favicon.png'];
+const ALLOWED_URLS = ['/docs', '/auth/generateApiKey', '/favicon.png'];
 
 function middleware() {
-  // .load loads file from root.
-  const spec = yamljs.load('./openapi.yaml');
-  router.get('/docs', koaSwagger({ routePrefix: false, swaggerOptions: { spec } }));
-
-  app.use(Jwt.verifier(ALLOW_URL));
-  app.use(router.routes());
+  app.use(Jwt.verifier(ALLOWED_URLS));
   app.use(bodyParser());
 }
 
 function routes() {
   const shipRoute = Container.get(ShipRoute);
+  const authRoute = Container.get(AuthRoute);
+  const docsRoute = Container.get(DocsRoute);
 
   app.use(shipRoute.getRouter().routes());
   app.use(shipRoute.getRouter().allowedMethods());
+  app.use(authRoute.getRouter().routes());
+  app.use(authRoute.getRouter().allowedMethods());
+  app.use(docsRoute.getRouter().routes());
+  app.use(docsRoute.getRouter().allowedMethods());
 }
 
 function initialize() {
@@ -40,7 +39,6 @@ function initialize() {
     app.listen(PORT);
 
     const shipService = Container.get(ShipService);
-
     await shipService.saveDataByBatch();
   }).catch((error) => { console.log(error); })
 }

@@ -7,7 +7,7 @@ dotenv.config()
 const host: string = process.env.HOST ?? 'localhost';
 const port: string = process.env.PORT ?? '3000';
 const URL: string = host + port;
-const APIKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2ODk4NTU5NTN9.g52M-1DDC4oVmSndrVpifgQ1JnRGbRYseTHkWAIiv0w';
+const APIKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRJZCI6Im5leHRwYXkiLCJpYXQiOjE2OTAzNTA2OTd9.M4bwN_V1S5nirdrghB4hW4oEEoiFv7448qjp3RdmJLY';
 const app = request(URL);
 
 describe('Ship API integration tests', () => {

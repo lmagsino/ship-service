@@ -6,6 +6,13 @@ dotenv.config()
 const API_KEY_QUERY_NAME = 'api-key'
 
 export default class Jwt {
+  static signer() {
+    const jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const data = { clientId: process.env.JWT_CLIENT_ID };
+    console.log('signer');
+    return jwt.sign(data, jwtSecretKey);
+  }
+
   static verifier(ALLOW_URL: string[]) {
     const middleware = async (ctx, next) => {
       if (ALLOW_URL.includes(ctx.url)) {
