@@ -22,7 +22,7 @@ How to run
 * Start and run the application `docker compose up`
 * Open browser, go to `localhost:3000/docs`
 * Click `Authorize`
-* Input the {API-KEY} to the value field
+* Input the `API-KEY` to the value field
 * Then click `Authorize` button
 * You may now test the APIs
 
