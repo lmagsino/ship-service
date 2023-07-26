@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import HttpStatus from 'http-status-codes';
+import ObjectUtils from '../utils/ObjectUtils';
 
 dotenv.config()
 
@@ -9,29 +11,31 @@ export default class Jwt {
   static signer() {
     const jwtSecretKey = process.env.JWT_SECRET_KEY;
     const data = { clientId: process.env.JWT_CLIENT_ID };
-    console.log('signer');
     return jwt.sign(data, jwtSecretKey);
   }
 
-  static verifier(ALLOW_URL: string[]) {
+  static verifier(ALLOWED_URLS: string[]) {
     const middleware = async (ctx, next) => {
-      if (ALLOW_URL.includes(ctx.url)) {
+      if (ALLOWED_URLS.includes(ctx.url)) {
         await next();
       } else {
-        try {
-          const data =
-            jwt.verify(
-              ctx.request.headers[API_KEY_QUERY_NAME],
-              process.env.JWT_SECRET_KEY
-            );
+        let data;
 
+        try {
+          data = jwt.verify(
+            ctx.request.headers[API_KEY_QUERY_NAME],
+            process.env.JWT_SECRET_KEY
+          );
+        } catch (e) {
+          ctx.throw(HttpStatus.UNAUTHORIZED);
+        }
+
+        if (ObjectUtils.isNotNull(data)) {
           if (data.clientId === process.env.JWT_CLIENT_ID) {
             await next();
           } else {
-            ctx.throw(401);
+            ctx.throw(HttpStatus.UNAUTHORIZED);
           }
-        } catch (error) {
-          ctx.throw(401);
         }
       }
     }

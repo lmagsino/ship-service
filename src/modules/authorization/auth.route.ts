@@ -18,7 +18,6 @@ export default class AuthRoute {
 
   public getRouter(): Router {
     this.router.get('/generateApiKey', async (ctx: Koa.Context) => {
-      console.log('generateApiKey')
       ctx.body = Jwt.signer();
     });
 

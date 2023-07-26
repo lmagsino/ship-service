@@ -1,7 +1,6 @@
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 
-import HttpStatus from 'http-status-codes';
 import DataSource from './config/database';
 import ShipRoute from './modules/ship/ship.route'
 import AuthRoute from './modules/authorization/auth.route';
@@ -12,7 +11,6 @@ import Jwt from './middleware/jwt';
 import ShipService from './modules/ship/ship.service';
 
 const app = new Koa();
-
 const ALLOWED_URLS = ['/docs', '/auth/generateApiKey', '/favicon.png'];
 
 function middleware() {
@@ -43,28 +41,11 @@ function initialize() {
   }).catch((error) => { console.log(error); })
 }
 
-function errorLogging() {
-// Generic error handling middleware.
-  app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
-    try {
-      await next();
-    } catch (error) {
-      ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
-      ctx.body = { error };
-      ctx.app.emit('error', error) // logs
-    //   ctx.status = error.statusCode ?? error.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
-    //   error.status = ctx.status;
-    //   ctx.body = { error };
-    }
-  });
-
-  // Application error logging.
-  app.on('error', console.error);
-}
+// Application error logging.
+app.on('error', console.error);
 
 middleware();
 routes();
 initialize();
-errorLogging();
 
 export default app;
