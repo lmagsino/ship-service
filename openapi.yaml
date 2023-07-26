@@ -73,13 +73,13 @@ paths:
             type: string
         - name: year_built_start
           in: query
-          description: By year built starting from
+          description: Range start for year built
           schema:
             type: integer
             format: int32
         - name: year_built_end
           in: query
-          description: By date range for year built
+          description: Range end for year build
           schema:
             type: integer
             format: int32
