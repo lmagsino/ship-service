@@ -11,4 +11,8 @@ export default class RoleRepository {
 
     return await DataSource.query(sql);
   }
+
+  async findAllByShipId(query: Query, id: string) {
+    return await DataSource.query(query, [id]);
+  }
 }

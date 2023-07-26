@@ -67,6 +67,17 @@ export default class ShipService {
       await this.shipRepository.findByDynamicQuery(
         Query.FIND_BY_DYNAMIC_QUERY, sqlQueryMapping
       );
+
+    for (const ship of ships) {
+      const roles =
+        await this.roleRepository.findAllByShipId(
+          Query.FIND_ROLES_BY_SHIP_ID,
+          ship.id
+        );
+      const roleNames = roles.map(role => { return role.name; });
+      ship.roles = roleNames;
+    }
+
     return ships;
   }
 
