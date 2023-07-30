@@ -18,7 +18,9 @@ Pre-reqs
 How to run
 * Open docker desktop
 * Open terminal, go to project directory `cd ship-service/`
-* Checkout to `develop` branch `git checkout develop`
+* Checkout to `main` branch `git checkout main`
+* Create `.env` file
+* Copy details from `.env.example` to `.env` file
 * Start and run the application `docker compose up`
 * Open browser, go to `localhost:3000/docs`
 * Click `Authorize`
