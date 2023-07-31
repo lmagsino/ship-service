@@ -11,7 +11,7 @@ import Jwt from './middleware/jwt';
 import ShipService from './modules/ship/ship.service';
 
 const app = new Koa();
-const ALLOWED_URLS = ['/docs', '/auth/generateApiKey', '/favicon.png'];
+const ALLOWED_URLS = ['/docs', '/favicon.png'];
 
 function middleware() {
   app.use(Jwt.verifier(ALLOWED_URLS));
