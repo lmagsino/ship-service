@@ -14,7 +14,7 @@ Technologies
 Pre-reqs
 * Install docker desktop `https://subscription.packtpub.com/book/cloud-and-networking/9781803234366/2/ch02lvl1sec05/installing-docker-compose`
 * Clone this project
-  
+
 How to run
 * Open docker desktop
 * Open terminal, go to project directory `cd ship-service/`

@@ -1,8 +1,10 @@
 import type * as Koa from 'koa';
-
-import Router from 'koa-router';
-import { Service } from 'typedi';
 import Jwt from '../../middleware/jwt';
+import Router from 'koa-router';
+import dotenv from 'dotenv';
+import { Service } from 'typedi';
+
+dotenv.config();
 
 @Service()
 export default class AuthRoute {
@@ -18,7 +20,10 @@ export default class AuthRoute {
 
   public getRouter(): Router {
     this.router.get('/generateApiKey', async (ctx: Koa.Context) => {
-      ctx.body = Jwt.signer();
+      const jwtSecretKey: string = process.env.JWT_SECRET_KEY ?? '';
+      const data: unknown = { clientId: process.env.JWT_CLIENT_ID };
+
+      ctx.body = Jwt.sign(jwtSecretKey, data);
     });
 
     return this.router;
