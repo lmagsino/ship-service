@@ -23,7 +23,7 @@ export default class AuthRoute {
       const jwtSecretKey: string = process.env.JWT_SECRET_KEY ?? '';
       const data: unknown = { clientId: process.env.JWT_CLIENT_ID };
 
-      ctx.body = Jwt.signer(jwtSecretKey, data);
+      ctx.body = Jwt.sign(jwtSecretKey, data);
     });
 
     return this.router;
