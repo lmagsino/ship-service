@@ -1,19 +1,26 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+
 import HttpStatus from 'http-status-codes';
 import ObjectUtils from '../utils/ObjectUtils';
 
-dotenv.config()
-
-const API_KEY_QUERY_NAME = 'api-key'
+const API_KEY_QUERY_NAME = 'api-key';
 
 export default class Jwt {
-  static signer() {
-    const jwtSecretKey = process.env.JWT_SECRET_KEY;
-    const data = { clientId: process.env.JWT_CLIENT_ID };
-    return jwt.sign(data, jwtSecretKey);
+  /**
+   * This function will generate a JWT token.
+   * @param secretKey
+   * @param data
+   * @returns {string} signed JWT token.
+   */
+  static signer(secretKey: string, data: unknown): string {
+    return jwt.sign(data, secretKey);
   }
 
+  /**
+   *
+   * @param ALLOWED_URLS
+   * @returns
+   */
   static verifier(ALLOWED_URLS: string[]) {
     const middleware = async (ctx, next) => {
       if (ALLOWED_URLS.includes(ctx.url)) {
