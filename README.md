@@ -1,4 +1,4 @@
-# Backend Challenge
+# Ship API
 
 Technologies
 * NodeJS
